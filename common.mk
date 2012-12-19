@@ -36,6 +36,8 @@ kernel_includes :=
 
 #Kernel includes. Not being executed on JB+
 ifeq ($(call is-vendor-board-platform,QCOM),true)
-    common_deps += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
-    kernel_includes += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+   ifeq ($(TARGET_PREBUILT_KERNEL,KERNEL_BIN),false)
+      common_deps += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+      kernel_includes += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+   endif
 endif
