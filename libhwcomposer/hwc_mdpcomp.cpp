@@ -18,6 +18,7 @@
 
 #include "hwc_mdpcomp.h"
 #include "external.h"
+#include "mdp_version.h"
 
 #define SUPPORT_4LAYER 0
 
@@ -358,7 +359,7 @@ int MDPComp::prepare(hwc_context_t *ctx, hwc_layer_1_t *layer,
 bool MDPComp::is_doable(hwc_context_t *ctx, hwc_display_contents_1_t* list) {
     //Number of layers
     int numAppLayers = ctx->listStats[HWC_DISPLAY_PRIMARY].numAppLayers;
-    if(numAppLayers < 1 || numAppLayers > (uint32_t)sMaxLayers) {
+    if(numAppLayers < 1 || numAppLayers > sMaxLayers) {
         ALOGD_IF(isDebug(), "%s: Unsupported number of layers",__FUNCTION__);
         return false;
     }
@@ -473,7 +474,12 @@ int MDPComp::mark_layers(hwc_context_t *ctx,
 
         if((layer_prop & MDPCOMP_LAYER_DOWNSCALE) &&
                         (layer_prop & MDPCOMP_LAYER_BLEND)) {
-            pipe_pref = PIPE_REQ_RGB;
+            if (qdutils::MDPVersion::getInstance().getMDPVersion() >=
+                    qdutils::MDP_V4_2) {
+                pipe_pref = PIPE_REQ_RGB;
+            } else {
+                return MDPCOMP_ABORT;
+            }
          }
 
         int allocated_pipe = sPipeMgr.req_for_pipe( pipe_pref);
