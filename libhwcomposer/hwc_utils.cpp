@@ -646,7 +646,7 @@ int hwc_sync(hwc_context_t *ctx, hwc_display_contents_1_t* list, int dpy,
     int acquireFd[MAX_NUM_LAYERS];
     int count = 0;
     int releaseFd = -1;
-#ifndef TARGET_MAKO_JWR66
+#ifndef JWR66Y
     int retireFd = -1;
 #endif
     int fbFd = -1;
@@ -662,7 +662,7 @@ int hwc_sync(hwc_context_t *ctx, hwc_display_contents_1_t* list, int dpy,
     }
     data.acq_fen_fd = acquireFd;
     data.rel_fen_fd = &releaseFd;
-#ifndef TARGET_MAKO_JWR66
+#ifndef JWR66Y
     data.retire_fen_fd = &retireFd;
 #endif
     char property[PROPERTY_VALUE_MAX];
@@ -763,7 +763,7 @@ int hwc_sync(hwc_context_t *ctx, hwc_display_contents_1_t* list, int dpy,
         //Signals when MDP finishes reading rotator buffers.
         ctx->mLayerRotMap[dpy]->setReleaseFd(releaseFd);
     }
-#ifndef TARGET_MAKO_JWR66
+#ifndef JWR66Y
     close(releaseFd);
     if(UNLIKELY(swapzero))
         list->retireFenceFd = -1;
